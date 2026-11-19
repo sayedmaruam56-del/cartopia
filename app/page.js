@@ -1,11 +1,19 @@
-"use client";
-import { useEffect } from "react";
-import api from "./lib/api";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import CategoriesBento from "./components/CategoriesBento";
+import BrandsStrip from "./components/BrandsStrip";
+import FeaturedProducts from "./components/FeaturedProducts";
+import CtaBanner from "./components/CtaBanner";
 
 export default function Home() {
-  useEffect(() => {
-    api.get("/products").then((res) => console.log(res.data));
-  }, []);
-
-  return <h1 className="text-3xl font-bold p-6">Home</h1>;
+  return (
+    <>
+      <Hero />
+      <Features />
+      <CategoriesBento />
+      <BrandsStrip />
+      <FeaturedProducts />
+      <CtaBanner />
+    </>
+  );
 }

@@ -6,6 +6,11 @@ import Footer from "./components/Footer";
 import CursorGlow from "./components/CursorGlow";
 import Background from "./components/Background";
 import { BRAND } from "./lib/brand";
+import { ToastProvider } from "./context/ToastContext";
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import AnnouncementBar from "./components/AnnouncementBar";
+import Script from "next/script";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,21 +34,32 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `try{var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t}catch(e){}`,
-    }}
-  />
-</head>
-      
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;}catch(e){}`,
+          }}
+        />
+      </head>
+
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <Background />
-  <CursorGlow />
-  <Navbar />
-  <main className="flex-1">{children}</main>
-  <Footer />
-</AuthProvider>
+          <ToastProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <Background />
+                <CursorGlow />
+                <AnnouncementBar />
+                <Navbar />
+
+                <main className="flex-1">{children}</main>
+
+                <Footer />
+              </WishlistProvider>
+            </CartProvider>
+          </ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

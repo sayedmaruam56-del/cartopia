@@ -1,22 +1,33 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
 
 const AuthContext = createContext(null);
 
+const listeners = new Set();
+const emit = () => listeners.forEach((l) => l());
+
+function subscribe(cb) {
+  listeners.add(cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    listeners.delete(cb);
+    window.removeEventListener("storage", cb);
+  };
+}
+const getSnapshot = () => localStorage.getItem("token");
+const getServerSnapshot = () => null;
+
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() =>
-    typeof window !== "undefined" ? localStorage.getItem("token") : null
-  );
+  const token = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  function login(newToken) {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
-  }
-
-  function logout() {
+  const login = (t) => {
+    localStorage.setItem("token", t);
+    emit();
+  };
+  const logout = () => {
     localStorage.removeItem("token");
-    setToken(null);
-  }
+    emit();
+  };
 
   return (
     <AuthContext.Provider value={{ token, login, logout }}>

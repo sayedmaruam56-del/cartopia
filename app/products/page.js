@@ -46,7 +46,12 @@ function ProductsView() {
   const page = Number(params.get("page") || 1);
   const key = params.toString();
 
-  const [result, setResult] = useState({ key: null, items: [], pages: 1, error: "" });
+  const [result, setResult] = useState({
+    key: null,
+    items: [],
+    pages: 1,
+    error: "",
+  });
 
   useEffect(() => {
     let off = false;
@@ -104,7 +109,11 @@ function ProductsView() {
           </h1>
           <p className="mt-1 text-muted">Explore our complete collection</p>
         </div>
-        <select value={sort} onChange={(e) => update({ sort: e.target.value })} className="input !w-auto">
+        <select
+          value={sort}
+          onChange={(e) => update({ sort: e.target.value })}
+          className="input w-auto"
+        >
           {SORTS.map((s) => (
             <option key={s.value} value={s.value} className="bg-card text-fg">
               {s.label}
@@ -116,21 +125,30 @@ function ProductsView() {
       {(keyword || category || brand) && (
         <div className="mb-6 flex flex-wrap items-center gap-2">
           {keyword && (
-            <button onClick={() => update({ keyword: "" })} className="chip !m-0">
+            <button
+              onClick={() => update({ keyword: "" })}
+              className="chip m-0"
+            >
               Search: {keyword} ✕
             </button>
           )}
           {category && (
-            <button onClick={() => update({ category: "" })} className="chip !m-0">
+            <button
+              onClick={() => update({ category: "" })}
+              className="chip m-0"
+            >
               {CATS[category] || "Category"} ✕
             </button>
           )}
           {brand && (
-            <button onClick={() => update({ brand: "" })} className="chip !m-0">
+            <button onClick={() => update({ brand: "" })} className="chip m-0">
               Brand ✕
             </button>
           )}
-          <button onClick={() => router.push("/products")} className="text-sm text-brand-400 hover:text-brand-300">
+          <button
+            onClick={() => router.push("/products")}
+            className="text-sm text-brand-400 hover:text-brand-300"
+          >
             Clear all
           </button>
         </div>
@@ -145,9 +163,16 @@ function ProductsView() {
       ) : result.items.length === 0 ? (
         <div className="card py-16 text-center">
           <p className="text-5xl">🔍</p>
-          <p className="mt-3 text-xl font-bold text-brand-200">No products found</p>
-          <p className="mt-1 text-muted">Try a different search or clear the filters.</p>
-          <button onClick={() => router.push("/products")} className="btn-primary mx-auto mt-6 !w-auto px-8">
+          <p className="mt-3 text-xl font-bold text-brand-200">
+            No products found
+          </p>
+          <p className="mt-1 text-muted">
+            Try a different search or clear the filters.
+          </p>
+          <button
+            onClick={() => router.push("/products")}
+            className="btn-primary mx-auto mt-6 w-auto px-8"
+          >
             Show all products
           </button>
         </div>
@@ -176,7 +201,7 @@ function ProductsView() {
               onClick={() => update({ page: n })}
               className={`h-10 w-10 rounded-xl text-sm font-semibold transition-all ${
                 n === page
-                  ? "bg-gradient-to-br from-brand-500 to-brand-700 on-brand shadow-[0_8px_24px_-8px_rgba(124,58,237,0.8)]"
+                  ? "bg-linear-to-br from-brand-500 to-brand-700 on-brand shadow-[0_8px_24px_-8px_rgba(124,58,237,0.8)]"
                   : "border border-line hover:border-brand-500"
               }`}
             >
