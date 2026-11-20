@@ -1,4 +1,4 @@
-export const BRAND = {
+﻿export const BRAND = {
   name: "Cartopia",
   letter: "C",
   tagline: "Your shopping universe",

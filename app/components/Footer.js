@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Reveal from "./Reveal";
 import Marquee from "./Marquee";
 import { BRAND } from "../lib/brand";
@@ -27,14 +27,12 @@ function BigWord() {
 export default function Footer() {
   return (
     <footer className="relative mt-24 overflow-hidden border-t border-line">
-      {/* سطر ضخم بيتفاعل مع السكرول */}
       <div className="py-8 border-b border-line">
         <Marquee speed={0.7}>
           {[0, 1, 2].map((n) => <BigWord key={n} />)}
         </Marquee>
       </div>
 
-      {/* chips عكس الاتجاه */}
       <div className="py-5 border-b border-line">
         <Marquee speed={0.5} reverse>
           {[0, 1, 2].flatMap((n) =>

@@ -164,7 +164,6 @@ html {
   color: #fff;
 }
 
-/* Scrollbar بنفسجي */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -176,12 +175,10 @@ html {
   border-radius: 9999px;
 }
 
-/* Grain سينمائي */
 body::after {
   display: none;
 }
 
-/* Spotlight ورا الماوس */
 .cursor-glow {
   position: fixed;
   top: 0;
@@ -197,7 +194,6 @@ body::after {
   will-change: transform;
 }
 
-/* حدود دوّارة */
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -236,7 +232,6 @@ body::after {
   pointer-events: none;
 }
 
-/* لمعة على الأزرار */
 .btn-primary {
   position: relative;
   overflow: hidden;
@@ -261,7 +256,6 @@ body::after {
   left: 130%;
 }
 
-/* Reveal عند السكرول */
 .reveal {
   opacity: 0;
   transform: translateY(28px) scale(0.98);
@@ -278,7 +272,6 @@ body::after {
   filter: none;
 }
 
-/* انتقال الصفحات */
 @keyframes pageIn {
   from {
     opacity: 0;
@@ -295,7 +288,6 @@ body::after {
   animation: pageIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* عناصر بتطفو + شريط بيتحرك */
 @keyframes float {
   0%,
   100% {
@@ -336,7 +328,6 @@ body::after {
     filter: none;
   }
 }
-/* ===== الخلفية الحية ===== */
 .bg-grid {
   position: absolute;
   inset: 0;
@@ -390,7 +381,6 @@ body::after {
   animation-delay: -10s;
 }
 
-/* ===== الشريط المتحرك ===== */
 .marquee-wrap {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(
@@ -438,7 +428,6 @@ body::after {
   background: #a78bfa;
   box-shadow: 0 0 10px #a78bfa;
 }
-/* ===== Light mode ===== */
 body {
   transition:
     background-color 0.4s,
@@ -502,7 +491,6 @@ body {
   background: #f6f2ff;
 }
 
-/* أيقونة الشمس والقمر */
 :root[data-theme="light"] .icon-sun {
   display: none;
 }
@@ -681,7 +669,6 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
-/* ===== Home ===== */
 @keyframes orbit {
   to {
     transform: rotate(360deg);
@@ -743,7 +730,6 @@ body {
     width: 100%;
   }
 }
-/* ===== Brands strip ===== */
 @keyframes brandScroll {
   to {
     transform: translateX(-50%);
@@ -757,7 +743,6 @@ body {
 .brand-wrap:hover .brand-track {
   animation-play-state: paused;
 }
-/* ===== Hero upgrade ===== */
 @keyframes rowLeft {
   to {
     transform: translateX(-50%);
@@ -798,7 +783,6 @@ body {
 .blur-in {
   animation: blurIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-/* ===== Splash + Hero animations ===== */
 @keyframes orbit {
   to {
     transform: rotate(360deg);

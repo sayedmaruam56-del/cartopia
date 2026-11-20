@@ -11,6 +11,8 @@ import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import AnnouncementBar from "./components/AnnouncementBar";
 import Script from "next/script";
+import ScrollToTop from "./components/ScrollToTop";
+import Splash from "./components/Splash";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -44,6 +46,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="min-h-full flex flex-col">
+        <Splash />
         <AuthProvider>
           <ToastProvider>
             <CartProvider>
@@ -56,6 +59,7 @@ export default function RootLayout({ children }) {
                 <main className="flex-1">{children}</main>
 
                 <Footer />
+                <ScrollToTop />
               </WishlistProvider>
             </CartProvider>
           </ToastProvider>

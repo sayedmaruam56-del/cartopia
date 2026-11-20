@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,7 +20,6 @@ export default function BrandsStrip() {
 
   if (brands && brands.length === 0) return null;
 
-  // بنكرر القايمة مرتين عشان اللف يبقى متصل من غير فاصل
   const loop = brands ? [...brands, ...brands] : [];
 
   return (

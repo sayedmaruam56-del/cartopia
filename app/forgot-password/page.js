@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -46,7 +46,6 @@ export default function ForgotPassword() {
 
   return (
     <AuthShell title={title} subtitle={subtitle}>
-      {/* مؤشر الخطوات */}
       <div className="flex gap-2 mb-6">
         {[1, 2, 3].map((n) => (
           <div

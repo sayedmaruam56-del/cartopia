@@ -1,4 +1,4 @@
-import Reveal from "./Reveal";
+﻿import Reveal from "./Reveal";
 
 const FEATURES = [
   { icon: "🚚", title: "Free Shipping", text: "On orders over 500 EGP" },

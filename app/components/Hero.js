@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import ProductRows from "./ProductRows";
@@ -59,7 +59,6 @@ export default function Hero() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* صفوف المنتجات المتحركة في العرض كله */}
       <ProductRows rows={3} className="opacity-50" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/80 to-[var(--color-ink)]/10" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--color-ink)] to-transparent" />
@@ -72,7 +71,6 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:py-20">
-        {/* النص */}
         <div key={`t-${i}`}>
           <p className="chip blur-in w-fit">{s.tag}</p>
 
@@ -132,7 +130,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* المدار */}
         <div
           key={`v-${i}`}
           className="pop-in relative mx-auto aspect-square w-full max-w-md"
@@ -158,7 +155,6 @@ export default function Hero() {
             <span className="float text-8xl drop-shadow-2xl">{s.emoji}</span>
           </div>
 
-          {/* كروت زجاجية عايمة */}
           <div className="glass float absolute -left-2 top-[14%] rounded-2xl px-4 py-2.5 text-sm font-medium">
             🔥 <span className="text-brand-400">+120</span> orders today
           </div>
@@ -171,7 +167,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* المؤشرات */}
       <div className="relative mx-auto flex max-w-7xl gap-3 px-4 pb-8">
         {SLIDES.map((_, k) => (
           <button

@@ -1,4 +1,4 @@
-import Hero from "./components/Hero";
+﻿import Hero from "./components/Hero";
 import Features from "./components/Features";
 import CategoriesBento from "./components/CategoriesBento";
 import BrandsStrip from "./components/BrandsStrip";

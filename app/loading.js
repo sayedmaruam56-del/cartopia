@@ -1,4 +1,4 @@
-export default function Loading() {
+﻿export default function Loading() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="relative h-28 w-28">

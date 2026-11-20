@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../lib/api";
@@ -17,7 +17,6 @@ export default function ChangePassword() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // الصفحة دي للمستخدم المسجل بس
   useEffect(() => {
     if (!token) router.replace("/login");
   }, [token, router]);
@@ -33,7 +32,6 @@ export default function ChangePassword() {
     setLoading(true);
     try {
       const { data } = await api.put("/users/changeMyPassword", form);
-      // السيرفر بيرجّع token جديد، نحفظه عشان نفضل مسجلين دخول
       if (data.token) login(data.token);
       setSuccess("Password changed successfully");
       setForm({ currentPassword: "", password: "", rePassword: "" });

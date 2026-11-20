@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "../context/CartContext";
@@ -24,7 +24,6 @@ export default function CartPage() {
   const remaining = Math.max(FREE_SHIPPING - total, 0);
   const progress = Math.min((total / FREE_SHIPPING) * 100, 100);
 
-  // مش مسجلة دخول
   if (!token) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
@@ -40,7 +39,6 @@ export default function CartPage() {
     );
   }
 
-  // الكارت فاضي
   if (!items || items.length === 0) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
@@ -79,7 +77,6 @@ export default function CartPage() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-        {/* المنتجات */}
         <div className="space-y-4">
           {items.map((item) => {
             const p = item.product;
@@ -155,7 +152,6 @@ export default function CartPage() {
           })}
         </div>
 
-        {/* الملخص */}
         <aside className="h-fit lg:sticky lg:top-28">
           <div className="glass spin-border rounded-3xl p-6">
             <h2 className="text-xl font-bold">Order Summary</h2>

@@ -32,7 +32,6 @@ function Details({ id }) {
   const [error, setError] = useState("");
   const [active, setActive] = useState(0);
 
-  // جلب المنتج
   useEffect(() => {
     let alive = true;
     api
@@ -44,7 +43,6 @@ function Details({ id }) {
     };
   }, [id]);
 
-  // منتجات مشابهة
   const categoryId = product?.category?._id;
   useEffect(() => {
     if (!categoryId) return;
@@ -88,7 +86,6 @@ function Details({ id }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10">
-      {/* breadcrumb */}
       <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted">
         <Link href="/" className="hover:text-brand-400">
           Home
@@ -111,7 +108,6 @@ function Details({ id }) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        {/* المعرض */}
         <div>
           <div className="glass spin-border relative aspect-square overflow-hidden rounded-3xl bg-white">
             <Image
@@ -155,7 +151,6 @@ function Details({ id }) {
           )}
         </div>
 
-        {/* التفاصيل */}
         <div className="flex flex-col">
           <div className="flex flex-wrap gap-2">
             {product.category && (
@@ -251,7 +246,6 @@ function Details({ id }) {
         </div>
       </div>
 
-      {/* مشابهة */}
       {related.length > 0 && (
         <div className="mt-20">
           <h2 className="mb-6 text-2xl font-bold">
@@ -270,6 +264,5 @@ function Details({ id }) {
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
-  // key بيعمل reset كامل للـ state لما الـ id يتغير
   return <Details key={id} id={id} />;
 }

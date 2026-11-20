@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -78,7 +78,6 @@ function OrderCard({ order, open, onToggle }) {
           </div>
         </div>
 
-        {/* Timeline */}
         <div className="mt-6 flex items-start">
           <Step done label="Placed" />
           <Step
@@ -151,10 +150,9 @@ export default function OrdersPage() {
 
   const userId = useMemo(() => (token ? getUserId(token) : null), [token]);
 
-  // الكارت بيتفرغ بعد الطلب، فنحدّثه
   useEffect(() => {
     refresh?.();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [refresh]);
 
   useEffect(() => {
     if (!userId) return;

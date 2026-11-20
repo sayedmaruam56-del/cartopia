@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
@@ -9,7 +9,6 @@ export default function WishlistPage() {
   const { token } = useAuth();
   const { items } = useWishlist();
 
-  // مش مسجلة دخول
   if (!token) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
@@ -27,7 +26,6 @@ export default function WishlistPage() {
     );
   }
 
-  // فاضية
   if (!items || items.length === 0) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">

@@ -1,4 +1,4 @@
-import { BRAND } from "../lib/brand";
+﻿import { BRAND } from "../lib/brand";
 export default function AuthShell({ title, subtitle, children }) {
   return (
     <div className="relative min-h-screen grid lg:grid-cols-2 overflow-hidden">

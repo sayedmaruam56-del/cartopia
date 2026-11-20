@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { BRAND } from "../lib/brand";
@@ -12,7 +12,6 @@ export default function CtaBanner() {
     <section className="mx-auto max-w-7xl px-4 py-14">
       <Reveal>
         <div className="on-brand announce relative overflow-hidden rounded-[2rem] px-6 py-14 text-center sm:px-12 sm:py-20">
-          {/* المنتجات المتحركة في الخلفية */}
           <ProductRows rows={2} tilt={-6} className="opacity-25" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-900/50 via-transparent to-violet-900/60" />
 

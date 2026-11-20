@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useRef } from "react";
 
 export default function Background() {
@@ -33,7 +33,6 @@ export default function Background() {
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
 
-        // النجوم بتبعد عن الماوس
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         const d = Math.hypot(dx, dy);
@@ -48,7 +47,6 @@ export default function Background() {
         ctx.fill();
       }
 
-      // خطوط بين النجوم القريبة
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i];

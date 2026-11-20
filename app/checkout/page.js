@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -143,7 +143,6 @@ export default function CheckoutPage() {
         className="grid gap-8 lg:grid-cols-[1fr_400px]"
       >
         <div className="space-y-6">
-          {/* 1 العنوان */}
           <div className="card rounded-3xl p-6 sm:p-8">
             <div className="mb-6 flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
@@ -164,7 +163,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* 2 الدفع */}
           <div className="card rounded-3xl p-6 sm:p-8">
             <div className="mb-6 flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
@@ -205,7 +203,6 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* الملخص */}
         <aside className="h-fit lg:sticky lg:top-28">
           <div className="glass spin-border rounded-3xl p-6">
             <h2 className="text-xl font-bold">Your order</h2>

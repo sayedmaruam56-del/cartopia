@@ -53,7 +53,6 @@ function CategoryView({ id }) {
         <span className="text-brand-400">{category?.name ?? "..."}</span>
       </nav>
 
-      {/* الهيدر */}
       <div className="glass spin-border mb-10 flex items-center gap-6 rounded-3xl p-6 sm:p-8">
         {category ? (
           <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-32">
@@ -83,7 +82,6 @@ function CategoryView({ id }) {
         </div>
       </div>
 
-      {/* المنتجات */}
       {!products ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (

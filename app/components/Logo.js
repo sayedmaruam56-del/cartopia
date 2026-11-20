@@ -1,4 +1,4 @@
-import { BRAND } from "../lib/brand";
+﻿import { BRAND } from "../lib/brand";
 
 function Mark() {
   return (
@@ -18,7 +18,6 @@ function Mark() {
         </linearGradient>
       </defs>
 
-      {/* حلقة الكوكب المائلة */}
       <g transform="rotate(-25 24 24)">
         <ellipse cx="24" cy="24" rx="22" ry="7" stroke="#c4b5fd" strokeOpacity="0.45" strokeWidth="1" />
         <circle r="2.6" fill="#fff">
@@ -30,7 +29,6 @@ function Mark() {
         </circle>
       </g>
 
-      {/* حرف C على شكل مدار */}
       <g className="logo-c">
         <circle
           cx="24"
@@ -44,7 +42,6 @@ function Mark() {
         />
       </g>
 
-      {/* نجمة في المركز */}
       <path
         className="animate-pulse"
         d="M24 15 L26.2 21.8 L33 24 L26.2 26.2 L24 33 L21.8 26.2 L15 24 L21.8 21.8 Z"

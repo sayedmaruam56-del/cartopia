@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -16,7 +16,6 @@ const links = [
   { href: "/community", label: "Community", badge: "New" },
 ];
 
-// بنقرأ الاسم من الـ token (JWT)
 function getName(token) {
   try {
     const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
@@ -32,7 +31,6 @@ function getName(token) {
   }
 }
 
-// النص بيعمل Roll لما تقفي عليه (اللينك لازم يكون فيه class group)
 function Roll({ children }) {
   return (
     <span className="relative inline-block overflow-hidden h-[1.25em] leading-[1.25em] align-middle">
@@ -140,7 +138,6 @@ export default function Navbar() {
             : "max-w-7xl py-3.5"
         }`}
       >
-        {/* Logo */}
         <Link href="/" className="group flex items-center gap-2.5">
           <span className="grid place-items-center w-9 h-9 rounded-xl font-extrabold on-brand bg-linear-to-r from-brand-400 to-brand-700 transition-transform group-hover:rotate-12">
             {BRAND.letter}
@@ -150,7 +147,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Links */}
         <ul className="hidden lg:flex items-center gap-1">
           {links.map((l) => {
             const active =
@@ -182,7 +178,6 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Actions */}
         <div className="hidden lg:flex items-center gap-1">
           <ThemeToggle />
           <Link href="/wishlist" className={iconBtn} title="Saved">
@@ -257,7 +252,6 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile button */}
         <button
           onClick={() => setOpen(!open)}
           className="lg:hidden text-brand-200 text-2xl"
@@ -267,7 +261,6 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
       <div
         className={`lg:hidden mx-auto max-w-7xl overflow-hidden transition-all duration-500 ${
           open ? "max-h-128 mt-2 opacity-100" : "max-h-0 opacity-0"

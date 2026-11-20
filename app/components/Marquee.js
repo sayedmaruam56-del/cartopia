@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useRef } from "react";
 
 export default function Marquee({ children, speed = 0.6, reverse = false }) {
@@ -14,7 +14,6 @@ export default function Marquee({ children, speed = 0.6, reverse = false }) {
     let lastY = window.scrollY;
     let raf;
 
-    // السرعة بتزيد مع سرعة السكرول
     function onScroll() {
       const y = window.scrollY;
       boost = Math.min(Math.abs(y - lastY) * 0.15, 14);

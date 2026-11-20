@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -164,9 +164,7 @@ export default function CommunityPage() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
-        {/* الفيد */}
         <div className="space-y-5">
-          {/* كتابة منشور */}
           <div className="card rounded-3xl p-5">
             {token ? (
               <form onSubmit={publish}>
@@ -217,7 +215,6 @@ export default function CommunityPage() {
             )}
           </div>
 
-          {/* الفلتر */}
           <div className="flex gap-2">
             {["All", ...TAGS].map((f) => (
               <button
@@ -234,7 +231,6 @@ export default function CommunityPage() {
             ))}
           </div>
 
-          {/* المنشورات */}
           {shown.map((p) => (
             <Reveal key={p.id}>
               <article
@@ -269,7 +265,6 @@ export default function CommunityPage() {
           ))}
         </div>
 
-        {/* الجنب */}
         <aside className="space-y-6">
           <div className="card rounded-3xl p-5">
             <h2 className="mb-4 font-bold">🔥 Trending products</h2>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { createContext, useContext, useSyncExternalStore } from "react";
 
 const AuthContext = createContext(null);
