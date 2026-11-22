@@ -4,7 +4,7 @@ A modern, animated e-commerce web app built as my Route Academy graduation proje
 
 ## Live Demo
 
-[Add your Vercel link here]
+https://cartopia-5hq4.vercel.app
 
 ## Features
 
@@ -31,7 +31,7 @@ A modern, animated e-commerce web app built as my Route Academy graduation proje
 ## Getting Started
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git clone https://github.com/sayedmaruam56-del/cartopia.git
 cd YOUR-REPO
 npm install
 npm run dev
