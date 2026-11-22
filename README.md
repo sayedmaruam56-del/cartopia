@@ -32,7 +32,7 @@ https://cartopia-5hq4.vercel.app
 
 ```bash
 git clone https://github.com/sayedmaruam56-del/cartopia.git
-cd YOUR-REPO
+cd cartopia
 npm install
 npm run dev
 ```
