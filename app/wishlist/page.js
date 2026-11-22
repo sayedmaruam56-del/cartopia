@@ -19,7 +19,7 @@ export default function WishlistPage() {
         <p className="mt-3 text-muted">
           Your wishlist is saved to your account.
         </p>
-        <Link href="/login" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/login" className="btn-primary mt-8 w-auto! px-8 py-3">
           Sign In
         </Link>
       </section>
@@ -34,7 +34,7 @@ export default function WishlistPage() {
         <p className="mt-3 text-muted">
           Tap the heart on any product to keep it here for later.
         </p>
-        <Link href="/products" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/products" className="btn-primary mt-8 w-auto! px-8 py-3">
           Explore Products
         </Link>
       </section>

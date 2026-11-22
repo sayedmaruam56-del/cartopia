@@ -24,8 +24,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: `${BRAND.name} | ${BRAND.tagline}`,
-  description: `${BRAND.name} - ${BRAND.tagline}`,
+  metadataBase: new URL("https://ecommerce.routemisr.com"),
+  title: {
+    default: "Cartopia | Shop smarter",
+    template: "%s | Cartopia",
+  },
+  description:
+    "Cartopia is a modern online store with electronics, fashion, beauty and more. Fast checkout, secure payment and easy returns.",
+  keywords: [
+    "Cartopia",
+    "online shopping",
+    "e-commerce",
+    "electronics",
+    "fashion",
+  ],
+  openGraph: {
+    title: "Cartopia | Shop smarter",
+    description: "Discover products, brands and categories you'll love.",
+    type: "website",
+    siteName: "Cartopia",
+  },
 };
 
 export default function RootLayout({ children }) {

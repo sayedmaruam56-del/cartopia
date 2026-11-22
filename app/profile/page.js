@@ -29,7 +29,7 @@ export default function ProfilePage() {
         <h1 className="gradient-text text-3xl font-bold">
           Sign in to view your profile
         </h1>
-        <Link href="/login" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/login" className="btn-primary mt-8 w-auto! px-8 py-3">
           Sign In
         </Link>
       </section>
@@ -61,6 +61,18 @@ export default function ProfilePage() {
       title: "Change Password",
       text: "Keep your account secure",
       href: "/change-password",
+    },
+    {
+      icon: "📍",
+      title: "Addresses",
+      text: "Manage your delivery addresses",
+      href: "/addresses",
+    },
+    {
+      icon: "✏️",
+      title: "Edit Profile",
+      text: "Update your name, email and phone",
+      href: "/profile/edit",
     },
   ];
 

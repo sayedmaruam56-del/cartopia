@@ -3,10 +3,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import ThemeToggle from "./ThemeToggle";
-import { BRAND } from "../lib/brand";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
+import SearchModal from "./SearchModal";
 
 const links = [
   { href: "/", label: "Home" },
@@ -16,24 +17,17 @@ const links = [
   { href: "/community", label: "Community", badge: "New" },
 ];
 
-function getName(token) {
+function decodeName(token) {
   try {
-    const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
-      atob(part)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    return JSON.parse(json).name || "User";
+    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(decodeURIComponent(escape(atob(payload)))).name || "";
   } catch {
-    return "User";
+    return "";
   }
 }
-
 function Roll({ children }) {
   return (
-    <span className="relative inline-block overflow-hidden h-[1.25em] leading-[1.25em] align-middle">
+    <span className="relative inline-block h-[1.25em] overflow-hidden align-middle leading-[1.25em]">
       <span className="block transition-transform duration-300 group-hover:-translate-y-full">
         {children}
       </span>
@@ -43,20 +37,17 @@ function Roll({ children }) {
     </span>
   );
 }
-
-function HeartIcon() {
+function HeartIcon({ filled }) {
   return (
     <svg
-      width="20"
-      height="20"
       viewBox="0 0 24 24"
-      fill="none"
+      className="h-[22px] w-[22px]"
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.8"
-      strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M12 21s-7-4.35-9.5-8.5C.5 9 2.5 5 6 5c2 0 3.5 1 4 2 .5-1 2-2 4-2 3.5 0 5.5 4 3.5 7.5C19 16.65 12 21 12 21z" />
+      <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
     </svg>
   );
 }
@@ -64,109 +55,83 @@ function HeartIcon() {
 function CartIcon() {
   return (
     <svg
-      width="20"
-      height="20"
       viewBox="0 0 24 24"
+      className="h-[22px] w-[22px]"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle cx="9" cy="20" r="1.5" />
-      <circle cx="18" cy="20" r="1.5" />
-      <path d="M2 3h3l2.7 12.4a1 1 0 0 0 1 .8h8.6a1 1 0 0 0 1-.8L20 7H6" />
+      <path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
     </svg>
   );
 }
+
 function Badge({ n }) {
-  return n > 0 ? (
-    <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-linear-to-br from-fuchsia-500 to-brand-600 px-1 text-[11px] font-bold on-brand shadow-[0_0_12px_rgba(217,70,239,0.7)]">
+  if (!n) return null;
+  return (
+    <span className="heart-pop absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-600 px-1 text-[10px] font-bold text-white">
       {n}
     </span>
-  ) : null;
+  );
 }
+
+const iconBtn =
+  "relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-brand-600/15 hover:text-brand-300";
+
 export default function Navbar() {
-  const { token, logout } = useAuth();
+  const pathname = usePathname();
   const router = useRouter();
+  const { token, logout } = useAuth();
   const { count: cartCount } = useCart();
   const { items: saved } = useWishlist();
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+
   const [menu, setMenu] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const name = useMemo(() => (token ? getName(token) : ""), [token]);
-  const initial = name ? name.trim()[0].toUpperCase() : "U";
+  const name = useMemo(() => (token ? decodeName(token) : ""), [token]);
+  const initial = (name || "U").charAt(0).toUpperCase();
 
   useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 12);
-    }
-    function onClick(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target))
-        setMenu(false);
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    document.addEventListener("mousedown", onClick);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      document.removeEventListener("mousedown", onClick);
+    if (!menu) return;
+    const close = (e) => {
+      if (!menuRef.current?.contains(e.target)) setMenu(false);
     };
-  }, []);
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [menu]);
 
-  function handleLogout() {
-    logout();
-    setOpen(false);
-    setMenu(false);
-    router.push("/login");
-  }
-
-  const iconBtn =
-    "relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-brand-200 hover:text-white hover:bg-brand-600/20 hover:-translate-y-0.5 transition-all";
-
-  const menuItem =
-    "block w-full text-left px-3 py-2.5 rounded-xl text-sm text-brand-200 hover:text-white hover:bg-brand-600/20 transition-colors";
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
-      <nav
-        className={`glass spin-border mx-auto rounded-2xl px-5 flex items-center justify-between transition-all duration-500 ${
-          scrolled
-            ? "max-w-6xl py-2 shadow-[0_12px_40px_-12px_rgba(124,58,237,0.7)]"
-            : "max-w-7xl py-3.5"
-        }`}
-      >
-        <Link href="/" className="group flex items-center gap-2.5">
-          <span className="grid place-items-center w-9 h-9 rounded-xl font-extrabold on-brand bg-linear-to-r from-brand-400 to-brand-700 transition-transform group-hover:rotate-12">
-            {BRAND.letter}
-          </span>
-          <span className="text-xl font-extrabold gradient-text">
-            {BRAND.name}
-          </span>
+    <header className="sticky top-2 z-50 px-3 pt-2">
+      <nav className="glass mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 rounded-full pl-4 pr-2">
+        <Link href="/" className="flex shrink-0 items-center">
+          <Logo />
         </Link>
 
-        <ul className="hidden lg:flex items-center gap-1">
+        <ul className="hidden items-center gap-1 lg:flex">
           {links.map((l) => {
-            const active =
-              l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
+            const active = isActive(l.href);
             return (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className={`group relative px-4 py-2 rounded-xl text-sm transition-colors hover:bg-brand-600/10 ${
-                    active ? "text-white" : "text-brand-200"
+                  className={`group relative block rounded-full px-4 py-2 text-sm transition-colors hover:bg-brand-600/10 ${
+                    active ? "bg-brand-600/20 text-brand-300" : "text-muted"
                   }`}
                 >
                   <Roll>{l.label}</Roll>
                   {l.badge && (
-                    <span className="ml-1.5 align-middle text-[10px] px-1.5 py-0.5 rounded-full bg-brand-600 text-white animate-pulse">
+                    <span className="ml-1.5 animate-pulse rounded-full bg-brand-600 px-1.5 py-0.5 align-middle text-[10px] text-white">
                       {l.badge}
                     </span>
                   )}
                   <span
-                    className={`absolute left-4 right-4 -bottom-0.5 h-0.5 rounded-full bg-linear-to-r from-brand-300 to-brand-600 origin-left transition-transform duration-300 ${
+                    className={`absolute inset-x-4 bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-to-r from-brand-300 to-brand-600 transition-transform duration-300 ${
                       active
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
@@ -178,141 +143,134 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="flex items-center gap-0.5 text-muted">
+          <SearchModal />
           <ThemeToggle />
-          <Link href="/wishlist" className={iconBtn} title="Saved">
-            <HeartIcon />
-            <span className="text-sm">Saved</span>
-            <Badge n={saved.length} />
+
+          <Link
+            href="/wishlist"
+            title="Saved"
+            aria-label="Saved"
+            className={`${iconBtn} ${pathname === "/wishlist" || saved?.length ? "text-brand-400" : ""}`}
+          >
+            <span key={saved?.length ?? 0} className="heart-pop">
+              <HeartIcon filled={!!saved?.length} />
+            </span>
+            <Badge n={saved?.length} />
           </Link>
-          <Link href="/cart" className={iconBtn} title="Cart">
+
+          <Link
+            href="/cart"
+            title="Cart"
+            aria-label="Cart"
+            className={`${iconBtn} ${pathname === "/cart" ? "text-brand-400" : ""}`}
+          >
             <CartIcon />
-            <span className="text-sm">Cart</span>
             <Badge n={cartCount} />
           </Link>
 
           {token ? (
-            <div className="relative ml-2" ref={menuRef}>
+            <div ref={menuRef} className="relative ml-1">
               <button
-                onClick={() => setMenu(!menu)}
-                aria-label="Account menu"
-                className="relative w-10 h-10 rounded-full grid place-items-center font-bold bg-linear-to-r from-brand-400 to-brand-700 ring-2 ring-brand-500/40 hover:ring-brand-300 hover:shadow-[0_0_22px_rgba(139,92,246,0.8)] transition-all"
+                onClick={() => setMenu((v) => !v)}
+                aria-label="Account"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-800 text-sm font-bold text-white transition-transform hover:scale-105"
               >
                 {initial}
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-ink" />
+                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-ink)] bg-emerald-400" />
               </button>
 
-              <div
-                className={`glass spin-border absolute right-0 mt-3 w-60 rounded-2xl p-2 origin-top-right transition-all duration-300 ${
-                  menu
-                    ? "opacity-100 scale-100 pointer-events-auto"
-                    : "opacity-0 scale-95 pointer-events-none"
-                }`}
-              >
-                <div className="px-3 py-3 border-b border-line mb-1">
-                  <p className="text-xs text-muted">Signed in as</p>
-                  <p className="font-semibold text-white truncate">{name}</p>
+              {menu && (
+                <div className="glass page-enter absolute right-0 top-12 w-56 rounded-2xl p-2 text-sm text-fg">
+                  <p className="truncate px-3 py-2 font-semibold">
+                    {name || "My account"}
+                  </p>
+                  <div className="my-1 h-px bg-line" />
+                  {[
+                    ["/profile", "Profile"],
+                    ["/orders", "My Orders"],
+                    ["/addresses", "Addresses"],
+                    ["/wishlist", "Saved"],
+                    ["/change-password", "Change password"],
+                  ].map(([href, label]) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenu(false)}
+                      className="block rounded-xl px-3 py-2 transition-colors hover:bg-brand-600/15 hover:text-brand-300"
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                  <div className="my-1 h-px bg-line" />
+                  <button
+                    onClick={() => {
+                      setMenu(false);
+                      logout();
+                      router.push("/login");
+                    }}
+                    className="block w-full rounded-xl px-3 py-2 text-left text-red-400 transition-colors hover:bg-red-500/10"
+                  >
+                    Sign out
+                  </button>
                 </div>
-                <Link
-                  href="/profile/orders"
-                  onClick={() => setMenu(false)}
-                  className={menuItem}
-                >
-                  My Orders
-                </Link>
-                <Link
-                  href="/wishlist"
-                  onClick={() => setMenu(false)}
-                  className={menuItem}
-                >
-                  Saved Items
-                </Link>
-                <Link
-                  href="/change-password"
-                  onClick={() => setMenu(false)}
-                  className={menuItem}
-                >
-                  Change Password
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className={`${menuItem} text-red-300! hover:bg-red-500/10!`}
-                >
-                  Logout
-                </button>
-              </div>
+              )}
             </div>
           ) : (
             <Link
               href="/login"
-              className="btn-primary w-auto! py-2! px-5! text-sm ml-2"
+              className="btn-primary ml-1 w-auto! px-5 py-2 text-sm"
             >
               Sign In
             </Link>
           )}
-        </div>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden text-brand-200 text-2xl"
-          aria-label="Menu"
-        >
-          {open ? "✕" : "☰"}
-        </button>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Menu"
+            className={`${iconBtn} lg:hidden`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            >
+              {open ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </nav>
 
-      <div
-        className={`lg:hidden mx-auto max-w-7xl overflow-hidden transition-all duration-500 ${
-          open ? "max-h-128 mt-2 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="glass rounded-2xl p-4 flex flex-col gap-3 text-brand-200">
-          <ThemeToggle className="self-start" />
-          {[
-            ...links,
-            { href: "/wishlist", label: "Saved" },
-            { href: "/cart", label: "Cart" },
-          ].map((l) => (
+      {open && (
+        <div className="glass page-enter mx-auto mt-2 max-w-6xl rounded-3xl p-3 lg:hidden">
+          {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="hover:text-white"
+              className={`flex items-center justify-between rounded-2xl px-4 py-3 font-medium transition-colors ${
+                isActive(l.href)
+                  ? "bg-brand-600/20 text-brand-300"
+                  : "hover:bg-brand-600/10"
+              }`}
             >
               {l.label}
+              {l.badge && (
+                <span className="rounded-full bg-brand-600 px-2 py-px text-[10px] font-bold uppercase text-white">
+                  {l.badge}
+                </span>
+              )}
             </Link>
           ))}
-          {token ? (
-            <>
-              <Link
-                href="/profile/orders"
-                onClick={() => setOpen(false)}
-                className="hover:text-white"
-              >
-                My Orders
-              </Link>
-              <Link
-                href="/change-password"
-                onClick={() => setOpen(false)}
-                className="hover:text-white"
-              >
-                Change Password
-              </Link>
-              <button onClick={handleLogout} className="text-left text-red-300">
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="hover:text-white"
-            >
-              Sign In
-            </Link>
-          )}
         </div>
-      </div>
+      )}
     </header>
   );
 }

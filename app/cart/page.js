@@ -32,7 +32,7 @@ export default function CartPage() {
           Sign in to see your cart
         </h1>
         <p className="mt-3 text-muted">Your cart is saved to your account.</p>
-        <Link href="/login" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/login" className="btn-primary mt-8 w-auto! px-8 py-3">
           Sign In
         </Link>
       </section>
@@ -47,7 +47,7 @@ export default function CartPage() {
         <p className="mt-3 text-muted">
           Looks like you haven&apos;t picked anything yet.
         </p>
-        <Link href="/products" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/products" className="btn-primary mt-8 w-auto! px-8 py-3">
           Start Shopping
         </Link>
       </section>

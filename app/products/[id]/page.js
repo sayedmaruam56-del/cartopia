@@ -7,6 +7,7 @@ import api from "../../lib/api";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import ProductCard from "../../components/ProductCard";
+import Reviews from "../../components/Reviews";
 
 function DetailsSkeleton() {
   return (
@@ -64,7 +65,7 @@ function Details({ id }) {
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
         <div className="mb-6 text-6xl">😵</div>
         <h1 className="gradient-text text-3xl font-bold">{error}</h1>
-        <Link href="/products" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/products" className="btn-primary mt-8 w-auto! px-8 py-3">
           Back to Shop
         </Link>
       </section>
@@ -245,7 +246,9 @@ function Details({ id }) {
           </div>
         </div>
       </div>
-
+      <div className="mt-20">
+        <Reviews productId={product._id} />
+      </div>
       {related.length > 0 && (
         <div className="mt-20">
           <h2 className="mb-6 text-2xl font-bold">

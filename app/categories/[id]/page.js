@@ -32,7 +32,7 @@ function CategoryView({ id }) {
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
         <div className="mb-6 text-6xl">🛰️</div>
         <h1 className="gradient-text text-3xl font-bold">{error}</h1>
-        <Link href="/categories" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/categories" className="btn-primary mt-8 w-auto! px-8 py-3">
           All Categories
         </Link>
       </section>

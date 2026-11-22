@@ -4,13 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import api from "../lib/api";
 import ProductCard from "../components/ProductCard";
 import Reveal from "../components/Reveal";
-
-const CATS = {
-  "6439d58a0049ad0b52b9003f": "Electronics",
-  "6439d5b90049ad0b52b90048": "Women's Fashion",
-  "6439d2d167d9aa4ca970649f": "Men's Fashion",
-  "6439d40367d9aa4ca97064a8": "Beauty & Health",
-};
+import Dropdown from "../components/Dropdown";
 
 const SORTS = [
   { value: "", label: "Featured" },
@@ -21,8 +15,8 @@ const SORTS = [
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
-      {Array.from({ length: 8 }).map((_, i) => (
+    <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="card overflow-hidden">
           <div className="skeleton aspect-square" />
           <div className="space-y-3 p-4">
@@ -36,6 +30,100 @@ function SkeletonGrid() {
   );
 }
 
+function Filters({
+  category,
+  brand,
+  min,
+  max,
+  categories,
+  brands,
+  update,
+  clear,
+}) {
+  const [draft, setDraft] = useState({ min, max });
+
+  function applyPrice() {
+    update({ min: draft.min, max: draft.max });
+  }
+
+  return (
+    <aside className="card h-fit space-y-7 p-5 lg:sticky lg:top-24">
+      <div>
+        <h3 className="mb-3 font-bold text-brand-200">Price (EGP)</h3>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min="0"
+            placeholder="Min"
+            value={draft.min}
+            onChange={(e) => setDraft({ ...draft, min: e.target.value })}
+            className="input h-11! px-3!"
+          />
+          <span className="text-muted">–</span>
+          <input
+            type="number"
+            min="0"
+            placeholder="Max"
+            value={draft.max}
+            onChange={(e) => setDraft({ ...draft, max: e.target.value })}
+            className="input h-11! px-3!"
+          />
+        </div>
+        <button onClick={applyPrice} className="btn-primary mt-3 py-2.5">
+          Apply price
+        </button>
+      </div>
+
+      <div>
+        <h3 className="mb-3 font-bold text-brand-200">Category</h3>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((c) => (
+            <button
+              key={c._id}
+              onClick={() =>
+                update({ category: category === c._id ? "" : c._id })
+              }
+              className={`rounded-full border px-3 py-1.5 text-sm transition-all ${
+                category === c._id
+                  ? "border-brand-500 bg-brand-500/20 text-brand-300"
+                  : "border-line text-muted hover:border-brand-500"
+              }`}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 font-bold text-brand-200">Brand</h3>
+        <div className="flex max-h-56 flex-wrap gap-2 overflow-y-auto pr-1">
+          {brands.map((b) => (
+            <button
+              key={b._id}
+              onClick={() => update({ brand: brand === b._id ? "" : b._id })}
+              className={`rounded-full border px-3 py-1.5 text-sm transition-all ${
+                brand === b._id
+                  ? "border-brand-500 bg-brand-500/20 text-brand-300"
+                  : "border-line text-muted hover:border-brand-500"
+              }`}
+            >
+              {b.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={clear}
+        className="w-full rounded-full border border-line py-2.5 text-sm text-brand-400 transition-colors hover:border-brand-500 hover:text-brand-300"
+      >
+        Clear all filters
+      </button>
+    </aside>
+  );
+}
+
 function ProductsView() {
   const router = useRouter();
   const params = useSearchParams();
@@ -43,9 +131,13 @@ function ProductsView() {
   const keyword = params.get("keyword") || "";
   const brand = params.get("brand") || "";
   const sort = params.get("sort") || "";
+  const min = params.get("min") || "";
+  const max = params.get("max") || "";
   const page = Number(params.get("page") || 1);
   const key = params.toString();
 
+  const [open, setOpen] = useState(false);
+  const [lists, setLists] = useState({ categories: [], brands: [] });
   const [result, setResult] = useState({
     key: null,
     items: [],
@@ -55,11 +147,25 @@ function ProductsView() {
 
   useEffect(() => {
     let off = false;
+    Promise.all([api.get("/categories"), api.get("/brands?limit=100")])
+      .then(([c, b]) => {
+        if (!off) setLists({ categories: c.data.data, brands: b.data.data });
+      })
+      .catch(() => {});
+    return () => {
+      off = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let off = false;
     const query = { page, limit: 12 };
     if (keyword) query.keyword = keyword;
     if (category) query["category[in]"] = category;
     if (brand) query.brand = brand;
     if (sort) query.sort = sort;
+    if (min) query["price[gte]"] = min;
+    if (max) query["price[lte]"] = max;
 
     api
       .get("/products", { params: query })
@@ -85,7 +191,7 @@ function ProductsView() {
     return () => {
       off = true;
     };
-  }, [key, page, keyword, category, brand, sort]);
+  }, [key, page, keyword, category, brand, sort, min, max]);
 
   const loading = result.key !== key;
 
@@ -100,6 +206,14 @@ function ProductsView() {
     if ("page" in changes) window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function clear() {
+    router.push("/products");
+  }
+
+  const catName = lists.categories.find((c) => c._id === category)?.name;
+  const brandName = lists.brands.find((b) => b._id === brand)?.name;
+  const hasFilters = keyword || category || brand || min || max;
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
@@ -109,20 +223,23 @@ function ProductsView() {
           </h1>
           <p className="mt-1 text-muted">Explore our complete collection</p>
         </div>
-        <select
-          value={sort}
-          onChange={(e) => update({ sort: e.target.value })}
-          className="input w-auto"
-        >
-          {SORTS.map((s) => (
-            <option key={s.value} value={s.value} className="bg-card text-fg">
-              {s.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setOpen(!open)}
+            className="glass rounded-full px-5 py-2.5 text-sm font-semibold lg:hidden"
+          >
+            {open ? "Hide filters" : "Filters"}
+          </button>
+          <Dropdown
+            value={sort}
+            onChange={(v) => update({ sort: v })}
+            options={SORTS}
+            className="w-56"
+          />
+        </div>
       </div>
 
-      {(keyword || category || brand) && (
+      {hasFilters && (
         <div className="mb-6 flex flex-wrap items-center gap-2">
           {keyword && (
             <button
@@ -137,16 +254,24 @@ function ProductsView() {
               onClick={() => update({ category: "" })}
               className="chip m-0"
             >
-              {CATS[category] || "Category"} ✕
+              {catName || "Category"} ✕
             </button>
           )}
           {brand && (
             <button onClick={() => update({ brand: "" })} className="chip m-0">
-              Brand ✕
+              {brandName || "Brand"} ✕
+            </button>
+          )}
+          {(min || max) && (
+            <button
+              onClick={() => update({ min: "", max: "" })}
+              className="chip m-0"
+            >
+              Price: {min || 0} – {max || "∞"} ✕
             </button>
           )}
           <button
-            onClick={() => router.push("/products")}
+            onClick={clear}
             className="text-sm text-brand-400 hover:text-brand-300"
           >
             Clear all
@@ -154,69 +279,89 @@ function ProductsView() {
         </div>
       )}
 
-      {loading ? (
-        <SkeletonGrid />
-      ) : result.error ? (
-        <p className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-center text-red-400">
-          {result.error}
-        </p>
-      ) : result.items.length === 0 ? (
-        <div className="card py-16 text-center">
-          <p className="text-5xl">🔍</p>
-          <p className="mt-3 text-xl font-bold text-brand-200">
-            No products found
-          </p>
-          <p className="mt-1 text-muted">
-            Try a different search or clear the filters.
-          </p>
-          <button
-            onClick={() => router.push("/products")}
-            className="btn-primary mx-auto mt-6 w-auto px-8"
-          >
-            Show all products
-          </button>
+      <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+        <div className={open ? "block" : "hidden lg:block"}>
+          <Filters
+            key={`${category}|${brand}|${min}|${max}`}
+            category={category}
+            brand={brand}
+            min={min}
+            max={max}
+            categories={lists.categories}
+            brands={lists.brands}
+            update={update}
+            clear={clear}
+          />
         </div>
-      ) : (
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
-          {result.items.map((p, i) => (
-            <Reveal key={p._id} delay={(i % 4) * 70}>
-              <ProductCard product={p} />
-            </Reveal>
-          ))}
-        </div>
-      )}
 
-      {!loading && result.pages > 1 && (
-        <div className="mt-12 flex items-center justify-center gap-2">
-          <button
-            disabled={page <= 1}
-            onClick={() => update({ page: page - 1 })}
-            className="rounded-xl border border-line px-4 py-2 transition-colors hover:border-brand-500 disabled:opacity-40"
-          >
-            ←
-          </button>
-          {Array.from({ length: result.pages }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              onClick={() => update({ page: n })}
-              className={`h-10 w-10 rounded-xl text-sm font-semibold transition-all ${
-                n === page
-                  ? "bg-linear-to-br from-brand-500 to-brand-700 on-brand shadow-[0_8px_24px_-8px_rgba(124,58,237,0.8)]"
-                  : "border border-line hover:border-brand-500"
-              }`}
-            >
-              {n}
-            </button>
-          ))}
-          <button
-            disabled={page >= result.pages}
-            onClick={() => update({ page: page + 1 })}
-            className="rounded-xl border border-line px-4 py-2 transition-colors hover:border-brand-500 disabled:opacity-40"
-          >
-            →
-          </button>
+        <div>
+          {loading ? (
+            <SkeletonGrid />
+          ) : result.error ? (
+            <p className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-center text-red-400">
+              {result.error}
+            </p>
+          ) : result.items.length === 0 ? (
+            <div className="card py-16 text-center">
+              <p className="text-5xl">🔍</p>
+              <p className="mt-3 text-xl font-bold text-brand-200">
+                No products found
+              </p>
+              <p className="mt-1 text-muted">
+                Try a different search or clear the filters.
+              </p>
+              <button
+                onClick={clear}
+                className="btn-primary mx-auto mt-6 w-auto! px-8"
+              >
+                Show all products
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
+              {result.items.map((p, i) => (
+                <Reveal key={p._id} delay={(i % 3) * 70}>
+                  <ProductCard product={p} />
+                </Reveal>
+              ))}
+            </div>
+          )}
+
+          {!loading && result.pages > 1 && (
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
+              <button
+                disabled={page <= 1}
+                onClick={() => update({ page: page - 1 })}
+                className="rounded-xl border border-line px-4 py-2 transition-colors hover:border-brand-500 disabled:opacity-40"
+              >
+                ←
+              </button>
+              {Array.from({ length: result.pages }, (_, i) => i + 1).map(
+                (n) => (
+                  <button
+                    key={n}
+                    onClick={() => update({ page: n })}
+                    className={`h-10 w-10 rounded-xl text-sm font-semibold transition-all ${
+                      n === page
+                        ? "bg-linear-to-br from-brand-500 to-brand-700 on-brand shadow-[0_8px_24px_-8px_rgba(124,58,237,0.8)]"
+                        : "border border-line hover:border-brand-500"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ),
+              )}
+              <button
+                disabled={page >= result.pages}
+                onClick={() => update({ page: page + 1 })}
+                className="rounded-xl border border-line px-4 py-2 transition-colors hover:border-brand-500 disabled:opacity-40"
+              >
+                →
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

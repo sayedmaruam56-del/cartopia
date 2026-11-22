@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -79,7 +79,19 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   }
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
+  useEffect(() => {
+    if (!token) return;
+    let alive = true;
+    api
+      .get("/addresses")
+      .then((res) => alive && setSavedAddresses(res.data.data))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [token]);
   if (!token) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center">
@@ -87,7 +99,7 @@ export default function CheckoutPage() {
         <h1 className="gradient-text text-3xl font-bold">
           Sign in to checkout
         </h1>
-        <Link href="/login" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/login" className="btn-primary mt-8 w-auto! px-8 py-3">
           Sign In
         </Link>
       </section>
@@ -102,7 +114,7 @@ export default function CheckoutPage() {
           Nothing to checkout
         </h1>
         <p className="mt-3 text-muted">Your cart is empty.</p>
-        <Link href="/products" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/products" className="btn-primary mt-8 w-auto! px-8 py-3">
           Start Shopping
         </Link>
       </section>
@@ -150,6 +162,27 @@ export default function CheckoutPage() {
               </span>
               <h2 className="text-xl font-bold">Shipping address</h2>
             </div>
+            {savedAddresses.length > 0 && (
+              <div className="mb-6 flex flex-wrap gap-3">
+                {savedAddresses.map((a) => (
+                  <button
+                    type="button"
+                    key={a._id}
+                    onClick={() =>
+                      setForm({
+                        details: a.details,
+                        phone: a.phone,
+                        city: a.city,
+                      })
+                    }
+                    className="glass rounded-2xl px-4 py-2 text-left text-sm transition-colors hover:text-brand-300"
+                  >
+                    <span className="font-semibold">{a.name}</span>
+                    <span className="block text-xs text-muted">{a.city}</span>
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="space-y-5">
               {field(
                 "details",

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../lib/api";
@@ -29,9 +29,16 @@ export default function ChangePassword() {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if (form.password === form.currentPassword) {
+      setError("New password must be different from your current password.");
+      return;
+    }
+
     setLoading(true);
     try {
       const { data } = await api.put("/users/changeMyPassword", form);
+
       if (data.token) login(data.token);
       setSuccess("Password changed successfully");
       setForm({ currentPassword: "", password: "", rePassword: "" });
@@ -63,6 +70,11 @@ export default function ChangePassword() {
           className="input"
           required
         />
+        {form.password && form.password === form.currentPassword && (
+          <p className="mt-1.5 text-xs text-red-400">
+            Must be different from your current password.
+          </p>
+        )}
         <input
           name="rePassword"
           type="password"

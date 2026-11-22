@@ -181,7 +181,7 @@ export default function OrdersPage() {
         <h1 className="gradient-text text-3xl font-bold">
           Sign in to see your orders
         </h1>
-        <Link href="/login" className="btn-primary mt-8 px-8 py-3">
+        <Link href="/login" className="btn-primary mt-8 w-auto! px-8 py-3">
           Sign In
         </Link>
       </section>
@@ -216,7 +216,7 @@ export default function OrdersPage() {
           <p className="mt-2 text-muted">
             When you place an order, it&apos;ll show up here.
           </p>
-          <Link href="/products" className="btn-primary mt-8 px-8 py-3">
+          <Link href="/products" className="btn-primary mt-8 w-auto! px-8 py-3">
             Start Shopping
           </Link>
         </div>

@@ -860,3 +860,6 @@ body {
     width: 100%;
   }
 }
+.orb {
+  display: none !important;
+}
